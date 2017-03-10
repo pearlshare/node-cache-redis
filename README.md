@@ -6,18 +6,17 @@
 
 # node-cache-redis [![See on Github](https://github.com/themes/tactile/images/octocat-icon.png)](https://github.com/pasupulaphani/simple-redis-store)
 
-Simplistic node redis cache ready can scale with generic-pool support
-
-> Cache Early; Cache Often
+Redis backed cache ready to scale with generic-pool support
 
 ## Prerequisites
 
 ```node >= 4``` This module requires nodejs v4 or above as it has dependencies on es6 components such as Map, Set, Promise etc.
 
 ## Featuring
+
 - Out of the box default configuration (but fully configurable)
 - Scalable easily, less friction during locking and purging
-- Design for multithread environment
+- Designed for a multithread environment
 - Extensible Logging
 - Flexible Expiration: Through configuration, you can set a default expiration mode and time for each layer.
 - Statistics / Counters: Gather statistical information and track caching operations in Performance Monitor as needed.
@@ -28,7 +27,6 @@ Simplistic node redis cache ready can scale with generic-pool support
 - Serialization: Used to serialize values in distributed scenarios, can be configured.
 - Synchronized locking with a semaphore
 - Provides both sync and async API
-
 
 ### Getting started
 

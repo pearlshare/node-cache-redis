@@ -110,7 +110,7 @@ describe("redisPool", () => {
       return pool.acquire().should.be.rejectedWith(Error, { name: "CONN_FAILED" });
     });
 
-    it("should conn timeout fail acquire connection", () => {
+    it("should timeout on failure to acquire a connection", () => {
       const poolOptions = {
         min : 1,
         acquireTimeoutMillis: 1
@@ -121,7 +121,10 @@ describe("redisPool", () => {
 
       // make the conn is inuse
       pool.acquire()
-        .then(conn => pool.release(conn));
+        .then(conn => pool.release(conn))
+        .catch(function (err) {
+          err.should.not.be.ok;
+        });
 
       pool.acquire().should.be.rejectedWith(Error, { name: "TimeoutError" });
     });

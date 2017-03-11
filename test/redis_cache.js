@@ -74,16 +74,19 @@ describe("redisCache", () => {
 
     describe("wrap", () => {
 
-      const value = "test";
+      function genValue () {
+        return "testValue" + Math.floor(Math.random() * 100);
+      }
 
       function genKey () {
-        return "" + Math.floor(Math.random(100));
+        return "testKey" + Math.floor(Math.random() * 100);
       }
 
       before(() => cache.deleteAll());
 
       it("should set if key doesn't exist", () => {
         const key = genKey();
+        const value = genValue();
 
         function fn () {
           return value;
@@ -100,8 +103,9 @@ describe("redisCache", () => {
 
       it("should get if key exists", () => {
         const key = genKey();
+        const value = genValue();
 
-        function failIfCalled (value) {
+        function failIfCalled () {
           should.fail("Should not be called");
           return value;
         }
@@ -113,6 +117,7 @@ describe("redisCache", () => {
       });
 
       it("should do nothing when ttlInSeconds=0", () => {
+        const value = genValue();
         function fn () {
           return value;
         }
@@ -125,6 +130,7 @@ describe("redisCache", () => {
       });
 
       it("should do nothing when ttlInSeconds < 0", () => {
+        const value = genValue();
         function fn () {
           return value;
         }
@@ -137,6 +143,7 @@ describe("redisCache", () => {
       });
 
       it("should do nothing when ttlInSeconds is invalid", () => {
+        const value = genValue();
         function fn () {
           return value;
         }

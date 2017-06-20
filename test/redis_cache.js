@@ -30,13 +30,12 @@ describe("redisCache", () => {
       redisOptions: redisOptions,
       cacheTtl: 100
     });
+    beforeEach(() => cache.deleteAll());
 
     describe("set", () => {
 
       const key = "captain-america";
       const value = "daddyIssues";
-
-      beforeEach(() => cache.deleteAll());
 
       it("should set value without expiry if ttl is not provided", () => {
 
@@ -50,6 +49,16 @@ describe("redisCache", () => {
         return cache.set("key", "value", 1)
           .should.eventually.be.ok();
       });
+
+      it("should not set value if expiry is 0", () => {
+        return cache.set("key", "value", 0)
+          .then( () => {
+            return cache.keys();
+          })
+          .then( (keys) => {
+            keys.length.should.equal(0);
+          });
+      });
     });
 
     describe("get", () => {
@@ -57,12 +66,12 @@ describe("redisCache", () => {
       const key = "chuck-norris";
       const value = "superman";
 
-      before(() => cache.set(key, value));
-
       it("should get the existing key", () => {
-
-        return cache.get(key)
+        return cache.set(key, value)
+        .then( () => {
+          return cache.get(key)
           .should.eventually.be.equal(value);
+        });
       });
 
       it("should not get the non-existing key", () => {
@@ -126,7 +135,13 @@ describe("redisCache", () => {
           .wrap(genKey(), fn, {
             ttlInSeconds: 0
           })
-          .should.eventually.be.equal(value);
+          .then( (val) => {
+            val.should.equal(value);
+            return cache.keys();
+          })
+          .then( (keys) => {
+            keys.length.should.equal(0);
+          });
       });
 
       it("should do nothing when ttlInSeconds < 0", () => {
@@ -139,7 +154,13 @@ describe("redisCache", () => {
           .wrap(genKey(), fn, {
             ttlInSeconds: -1
           })
-          .should.eventually.be.equal(value);
+          .then( (val) => {
+            val.should.equal(value);
+            return cache.keys();
+          })
+          .then( (keys) => {
+            keys.length.should.equal(0);
+          });
       });
 
       it("should do nothing when ttlInSeconds is invalid", () => {
@@ -152,7 +173,13 @@ describe("redisCache", () => {
           .wrap(genKey(), fn, {
             ttlInSeconds: "NOT_NUMBER"
           })
-          .should.eventually.be.equal(value);
+          .then( (val) => {
+            val.should.equal(value);
+            return cache.keys();
+          })
+          .then( (keys) => {
+            keys.length.should.equal(0);
+          });
       });
     });
 
